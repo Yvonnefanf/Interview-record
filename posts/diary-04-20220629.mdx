@@ -1,0 +1,21 @@
+---
+title: paper04 BERT Pre-training of Deep Bidirectional Transformers for Language Understanding
+description: 'a language representation model'
+date: Jun 29 2022
+---
+[paper-link](https://arxiv.org/pdf/1810.04805.pdf&usg=ALkJrhhzxlCL6yTht2BRmH9atgvKFxHsxQ)｜ [code-link](https://github.com/google-research/bert)<br/>
+
+**Problem:**  existing strategies（for applying pre-trained language representations）may restrict the power of the pre-trained representations, especially for the fine-tuning approaches. The major limitation is that standard language models are unidirectional, and this limits the choice of architectures that can be used during pre-training.
+
+The paper improve the fine-tuning based approaches by proposing BERT.BERT alleviates the previously mentioned unidirectionality constraint by using a “masked language model” (MLM) pre-training objective.  BERT is the first finetuning based representation model that achieves state-of-the-art performance on a large suite of sentence-level and token-level tasks, outperforming many task-specific architectures.
+
+### Related Work
+
+pre-training general language representations
+
+- **Unsupervised Feature-based Approaches:**<br/>
+  Pre-trained word embeddings are an integral part of modern NLP systems,
+
+  
+
+
