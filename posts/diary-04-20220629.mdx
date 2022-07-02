@@ -15,7 +15,21 @@ pre-training general language representations
 
 - **Unsupervised Feature-based Approaches:**<br/>
   Pre-trained word embeddings are an integral part of modern NLP systems,
+  - ELMo and its predecessor generalize traditional word embedding research along a different dimension. They extract context-sensitive features from a left-to-right and a right-to-left language model.The contextual representation of each token is the concatenation of the left-to-right and right-to-left representations.
+  - Melamud et al. proposed learning contextual representations through a task to predict a single word from both left and right context using LSTMs. Similar to ELMo, their model is **feature-based** and not deeply bidirectional.
+  **F shows that the cloze task can be used to improve the robustness of text generation models.**
 
-  
+- **Unsupervised Fine-tuning Approaches:**<br/>
+  sentence or document encoders which produce contextual token representations have been pre-trained from unlabeled text and fine-tuned for a supervised downstream task.The advantage of these approaches is that few parameters need to be learned from scratch.At least partly due to this advantage, OpenAI GPT (Radford et al., 2018) achieved previously state-of-the-art results on many sentencelevel tasks from the GLUE benchmark.
 
+### BERT
+  There are two steps in our framework: _pre-training and fine-tuning_. 
+  - Model Architecture<br/>
+    a multi-layer bidirectional Transformer encoder 
+    BERT(BASE): L= 12，H=768，A=12，总参数=110M
+    BERT(LARGE): L=24，H=1024，A=16，总参数=340M
+    BERTBASE was chosen to have the same model size as OpenAI GPT for comparison purposes.Critically, however, the BERT Transformer uses **bidirectional** self-attention, while the GPT Transformer uses constrained self-attention where every token can only attend to context to its left.4
 
+  - Input/Output Representations<br/>
+     Input representation: both a single sentence and a pair of sentences(e.g., h Question, Answeri) in one token sequence.<br/>
+     A “sequence”: the input token sequence to BERT, which may be a single sentence or two sentences packed together.
