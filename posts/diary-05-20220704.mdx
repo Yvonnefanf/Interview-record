@@ -1,8 +1,83 @@
 ---
 title: paper05 Fault Localization via Efficient Probabilistic Modeling of Program Semantics. ICSE'22
-description: 'a language representation model'
+description: 'KEYWORDS: fault localization, semantics, probabilistic modeling'
 date: Jul 04 2022
 ---
-[paper-link](  https://xiongyingfei.github.io/papers/ICSE22a.pdf)<br/>
 
-**Problem:**  
+[paper-link](https://xiongyingfei.github.io/papers/ICSE22a.pdf)<br/>
+
+**Problem:** <br/>
+Current Testing-based fault localization approaches either consider the full semantics of the program _(e.g., mutation-based fault
+localization and angelic debugging)_, leading to scalability issues,or ignore the semantics of the program _(e.g., spectrum-based fault
+localization)_, leading to imprecise localization results.
+
+** SmartFL intro:** <br/>
+_(SeMantics bAsed pRobabilisTic Fault Localization)_<br/>
+
+- key idea: by modeling only the correctness of program values but not full semantics, _(a balance could be reached between effectiveness and scalability)_.
+- approach: model program semantics and utilize information from static analysis and dynamic execution traces in our modeling
+
+** INTRODUCTION:**
+
+A buggy program element causes the failure of a test is determined by four conditions:<br/>
+
+- whether the test covers the buggy program element
+- whether the execution of the buggy program element results in an error in the program state
+- whether the error in the program state is propagated to the output
+- whether the error in the output is captured by an assertion or not
+
+**Coverage-based fault localization** ignores the semantics of the target program and thus only considers the first condition.<br/>
+**Mutation-based fault localization(MBFL)** generates many mutations on each element and watches whether the program output or the test result (i.e., the pass/fail status) changes.
+(If a change in a statement is more likely to change the program output or the test result in the failing tests, and less likely in the passing tests, the statement is likely to be faulty. )<br/>
+**Angelic debugging** uses symbolic analysis to determine whether the result of an expression can be modified to reverse the results of failing tests while maintaining the results of the passing tests, and such an expression is considered more likely to be faulty.<br/>
+All approached take the full program semantics into consideration, **time-consuming**
+
+This paper propose a nobel approach **SmartFL** that considered the four factors via efficient probabilistic modeling of the program semantics.
+SmartFL's core insight: the probability of a fault in the current program element leads to the current test result can be efficicently setimated by analyzing the following:<br/>
+
+- the probability of each instructon in the traces of test executions to introduce an error into the system state.
+- the probability of each instructon to propagate an error<br/>
+  Two challange:
+- how to model the effect from the control statements
+- scalability
+
+**OVERVIEW**
+
+  - ** Motivating Example **
+
+  ```java
+  public class CondTest {
+    public static int foo(int a) {
+      if( a <= 2) { // buggy, should be a < 2
+        a = a + 1;
+      }
+      return a;
+    }
+
+    @Test
+    void pass() {
+      assertEuals(2, foo(1));
+    }
+
+    @Test
+    void fail() {
+      assertEuals(2, foo(2));
+    }
+  }
+  ```
+
+Coverage-based approach: <br/>
+the coverage of passing tests and failing tests are completely identical: ❌<br/>
+
+Other Existing Approaches:
+  - MBFL: 1.mutates each statement to generate multiple mutants. 2.check whether the output of each test execution or the test result (pass/fail status) changes<br/>
+          in this way, mutating line 4 or line 6 's has a high probability to fail test pass,while mutating line 3 has a much smaller probability to fail test pass. ❌ <br/>
+  - angelic debugging: analysis each expression, heavy and has limited scalability. ❌<br/>
+
+      
+
+Our Approach: <br/>
+
+1. introduce a set of Bernoulli random variables to represent whether a statement is correct, denoted by 𝑆𝑖, where 𝑖 is the line number of the statement.
+2. another set of Bernoulli random variables to represent whether the output value of an expression execution is correct.
+   In this example, we use 𝑉𝑝,𝑖 (𝑉𝑓 ,𝑖) to denote the value produced by the expression execution at line 𝑖 in test pass (fail).
